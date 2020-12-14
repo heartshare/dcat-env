@@ -7,6 +7,19 @@ use Illuminate\Support\Str;
 class SatanEnv
 {
     /**
+     * 删除某个配置
+     * @param $key
+     * @return bool|void
+     */
+    public static function delete($key)
+    {
+        $key = self::resolving($key);
+        if (!self::has($key))return false;
+        $env = self::load();
+        unset($env[$key]);
+        return self::save($env);
+    }
+    /**
      * 获取env列表
      * @param null $key
      * @return array|mixed
@@ -18,7 +31,29 @@ class SatanEnv
         if (!is_null($key) && !empty($env[$key]))return $env[$key];
         return $env;
     }
+    public static function batchSet($key)
+    {
+        foreach ($key as $item=>$value)
+        {
+            self::set($item,$value);
+        }
+    }
 
+    /**
+     * 新增
+     * @param $key
+     * @param $value
+     * @return bool|void
+     */
+    public static function add($key,$value)
+    {
+        if (self::has($key)) return self::set($key,$value);
+
+        $key = self::resolving($key);
+        $env = self::load();
+        $env[$key]=$value;
+        return self::save($env);
+    }
     /**
      * 设置env变量
      * @param $key
@@ -28,7 +63,6 @@ class SatanEnv
     public static function set($key,$value)
     {
         if (!self::has($key)) return false;
-
         //解析key
         $key=self::resolving($key);
         $data = self::getEnv();

@@ -8,7 +8,7 @@ use Dcat\Admin\Admin;
 class DcatEnvServiceProvider extends ServiceProvider
 {
     protected $menu=[
-        ['title'=>'edit-env','uri'=>'dcat-env','icon'=>'feather icon-edit']
+        ['title'=>'edit-env','uri'=>'dcat-env/index','icon'=>'feather icon-edit']
     ];
 	protected $js = [
         'js/index.js',
