@@ -1,6 +1,6 @@
 {
     "name": "death_satan/dcat-env",
-    "description": "dcat-admin plug-in unit",
+    "description": "dcat-admin plug-in unit zh:快速进行动态编辑env文件",
     "type": "library",
     "keywords": ["dcat-admin", "extension","env"],
     "homepage": "https://github.com/death_satan/dcat-env",

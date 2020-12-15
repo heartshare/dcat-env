@@ -48,7 +48,7 @@ class SatanEnv
     public static function add($key,$value)
     {
         if (self::has($key)) return self::set($key,$value);
-
+        $s = new \SplFileObject('');
         $key = self::resolving($key);
         $env = self::load();
         $env[$key]=$value;
