@@ -30,7 +30,7 @@ class SatanEnv extends Migration
                 ->comment('更新时间')
                 ->nullable(false);
         });
-        $row = \Dcat\Admin\Satan\Env\Library\SatanEnv::getEnv();
+        $row = app()->get('satan_env')->getEnv();
         foreach ($row as $item=>$value)
         {
             \Dcat\Admin\Satan\Env\Models\Env::query()

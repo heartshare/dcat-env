@@ -6,7 +6,7 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Layout\Content;
-use Dcat\Admin\Satan\Env\Library\SatanEnv;
+use Dcat\Admin\Satan\Env\Facades\SatanEnv;
 use Dcat\Admin\Satan\Env\Models\Env;
 use Dcat\Admin\Show;
 use Illuminate\Support\Facades\Date;

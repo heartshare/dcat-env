@@ -3,40 +3,50 @@
 
 namespace Dcat\Admin\Satan\Env\Library;
 use Illuminate\Support\Str;
-
-class SatanEnv
+use League\CommonMark\Util\ConfigurationAwareInterface;
+use League\Flysystem\Config;
+use Symfony\Component\Routing\Generator\ConfigurableRequirementsInterface;
+use Dcat\Admin\Satan\Env\Library\SaTanEnvInterface;
+/**
+ * env操作类
+ * Class SatanEnv
+ * @package Dcat\Admin\Satan\Env\Library
+ */
+class SatanEnv implements SatanEnvInterface
 {
+    /**
+     * @var \Illuminate\Contracts\Foundation\Application $app
+     */
+    protected $app;
+    public function __construct(\Illuminate\Contracts\Foundation\Application $app)
+    {
+        $this->app = $app;
+    }
+
     /**
      * 删除某个配置
      * @param $key
      * @return bool|void
      */
-    public static function delete($key)
+    public  function delete($key)
     {
-        $key = self::resolving($key);
-        if (!self::has($key))return false;
-        $env = self::load();
+        $key = $this->resolving($key);
+        if (!$this->has($key))return false;
+        $env = $this->load();
         unset($env[$key]);
-        return self::save($env);
+        return $this->save($env);
     }
     /**
      * 获取env列表
      * @param null $key
      * @return array|mixed
      */
-    public static function getEnv($key=null)
+    public  function getEnv($key=null)
     {
-        $env = self::load();
-        $key = is_null($key)?$key:self::resolving($key);
+        $env = $this->load();
+        $key = is_null($key)?$key:$this->resolving($key);
         if (!is_null($key) && !empty($env[$key]))return $env[$key];
         return $env;
-    }
-    public static function batchSet($key)
-    {
-        foreach ($key as $item=>$value)
-        {
-            self::set($item,$value);
-        }
     }
 
     /**
@@ -45,13 +55,13 @@ class SatanEnv
      * @param $value
      * @return bool|void
      */
-    public static function add($key,$value)
+    public  function add($key,$value)
     {
-        if (self::has($key)) return self::set($key,$value);
-        $key = self::resolving($key);
-        $env = self::load();
+        if ($this->has($key)) return $this->set($key,$value);
+        $key = $this->resolving($key);
+        $env = $this->load();
         $env[$key]=$value;
-        return self::save($env);
+        return $this->save($env);
     }
     /**
      * 设置env变量
@@ -59,14 +69,14 @@ class SatanEnv
      * @param $name
      * @return bool|void
      */
-    public static function set($key,$value)
+    public  function set($key,$value)
     {
-        if (!self::has($key)) return false;
+        if (!$this->has($key)) return $this->add($key);
         //解析key
-        $key=self::resolving($key);
-        $data = self::getEnv();
+        $key=$this->resolving($key);
+        $data = $this->getEnv();
         $data[$key]=$value;
-        return self::save($data);
+        return $this->save($data);
     }
 
     /**
@@ -74,16 +84,16 @@ class SatanEnv
      * @param $key
      * @return bool
      */
-    public static function has($key)
+    public  function has($key)
     {
-        return !empty(self::load()[self::resolving($key)]);
+        return !empty($this->load()[$this->resolving($key)]);
     }
     /**
      * 解析字符串
      * @param $str string key值
      * @return string
      */
-    public static function resolving($str)
+    public  function resolving($str)
     {
         if (empty($str))return $str;
         //将所有字母转换为大小写
@@ -100,10 +110,10 @@ class SatanEnv
      *
      * @return array
      */
-    public static function load()
+    public  function load()
     {
         // 拼接文件
-        $filePath = self::getEnvPath();
+        $filePath = $this->getEnvPath();
         if (!is_readable($filePath) || !is_file($filePath)) {
             throw new \InvalidArgumentException(
                 'The file "' . $filePath . '" not readable or not found'
@@ -142,10 +152,10 @@ class SatanEnv
      *
      * @return void|bool
      */
-    public static function save(array $envData)
+    public  function save(array $envData)
     {
         // 拼接文件
-        $filePath = self::getEnvPath();
+        $filePath = $this->getEnvPath();
         if (!is_writable($filePath) || !is_file($filePath)) {
             throw new \InvalidArgumentException(
                 'The file "' . $filePath . '" not writable or not found'
@@ -167,7 +177,8 @@ class SatanEnv
         }
         return true;
     }
-    public static function getEnvPath()
+
+    public  function getEnvPath()
     {
         return is_file(base_path('.env'))?base_path('.env'):false;
     }

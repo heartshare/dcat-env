@@ -8,6 +8,7 @@ class Setting extends Form
 {
     public function form()
     {
+
         $this->display('title')
         ->value('Quick Edit env file');
         $this->submitButton(false);
