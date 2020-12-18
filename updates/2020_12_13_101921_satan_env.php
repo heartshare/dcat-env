@@ -14,7 +14,8 @@ class SatanEnv extends Migration
     public function up()
     {
         Schema::dropIfExists('satan_env');
-            Schema::create('satan_env',function (Blueprint $table){
+
+        Schema::create('satan_env',function (Blueprint $table){
             $table->engine = 'InnoDB';
             $table->id();
             $table->string('env_key','255')
@@ -30,7 +31,7 @@ class SatanEnv extends Migration
                 ->comment('更新时间')
                 ->nullable(false);
         });
-        $row = app()->get('satan_env')->getEnv();
+        $row = \Dcat\Admin\Satan\Env\Facades\SatanEnv::load();
         foreach ($row as $item=>$value)
         {
             \Dcat\Admin\Satan\Env\Models\Env::query()
